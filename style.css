@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: lightcoral;
+}
+
+.container {
+    margin: 0 auto;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+#winnerMessage {
+    text-align: center;
+}
+
+.gameBoard {
+    width: 600px;
+    height: 600px;
+    background-color: white;
+}
+
+.gameField {
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+}
