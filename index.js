@@ -85,25 +85,27 @@ function GameController(
 
     const checkForWin = () => {
         const rawBoard = board.getBoard().map(row => row.map(cell => cell.getValue()));
+        //Check rows and columns
         for(let i = 0; i < 3; i++){
             if(rawBoard[i][0] === rawBoard[i][1] && rawBoard[i][1] === rawBoard[i][2] && rawBoard[i][0] !== 0){
-                let winner = rawBoard[0][0] == 'X' ? players[0] : players[1];
+                let winner = rawBoard[i][0] == 'X' ? 0 : 1;
                 return winner;
             }else if(rawBoard[0][i] === rawBoard[1][i] && rawBoard[1][i] === rawBoard[2][i] && rawBoard[0][i] !== 0){
-                let winner = rawBoard[0][0] == 'X' ? players[0] : players[1];
+                let winner = rawBoard[0][i] == 'X' ? 0 : 1;
                 return winner;
-            }
+                }
         }
-        
+        //Check diagonals
         if(rawBoard[0][0] === rawBoard[1][1] && rawBoard[1][1] === rawBoard[2][2] && rawBoard[0][0] !== 0){
-            let winner = rawBoard[0][0] == 'X' ? players[0] : players[1];
+            let winner = rawBoard[0][0] == 'X' ? 0 : 1;
             return winner;
-        }
-        if(rawBoard[0][2] === rawBoard[1][1] && rawBoard[1][1] === rawBoard[2][0] && rawBoard[0][2] !== 0){
-            let winner = rawBoard[0][0] == 'X' ? players[0] : players[1];
+        }else if(rawBoard[0][2] === rawBoard[1][1] && rawBoard[1][1] === rawBoard[2][0] && rawBoard[0][2] !== 0){
+            let winner = rawBoard[0][2] == 'X' ? 0 : 1;
             return winner;
+        //If not win check if theres a tie
+        }else if(rawBoard.every((row) => (row.every((cell) => cell != 0)))){
+            return 2;
         }
-        return false;
     }
 
     const playRound = (row, column) => {
@@ -112,17 +114,21 @@ function GameController(
         );
         board.claimCell(column, row, getActivePlayer().token);
         
-        if(checkForWin() == players[0]){
-            console.log(`winner ${players[0].name}`);
+        let whoWon = checkForWin();
+        if(whoWon == 0 || whoWon == 1){
+            console.log(`Winner ${players[whoWon].name}!`);
+            board.printBoard();
+            console.log(`Winner ${players[whoWon].name}!`);
             board.resetBoard();
             activePlayer = players[0];
-            printNewRound();
-        }else if(checkForWin() == players[1]){
-            console.log(`winner ${players[1].name}`);
+        }else if(whoWon == 2){
+            console.log("It's a TIE!");
+            board.printBoard();
+            console.log("It's a TIE!");
             board.resetBoard();
             activePlayer = players[0];
-            printNewRound();
         }
+
         switchPlayerTurn();
         printNewRound();
     };
