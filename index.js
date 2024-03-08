@@ -3,6 +3,8 @@ function Gameboard() {
     const cols = 3;
     const board = [];
 
+    const gui = GUIController(board);
+
     for(let i = 0; i < rows; i++){
         board[i] = [];
         for(let j = 0; j < cols; j++){
@@ -15,6 +17,7 @@ function Gameboard() {
     const claimCell = (column, row, player) => {
         if(board[row][column].getValue() == 0){
             board[row][column].changeValue(player);
+            gui.claimCellGUI(row, column, player);
         }else {
             console.log('This cell is already claimed!')
         }
@@ -53,11 +56,88 @@ function Cell() {
 
 }
 
+function GUIController() {
+    const gameBoardContainer = document.querySelector('.gameBoardContainer');
+    const winMessage = document.querySelector('#winnerMessage');
+    const endScreen = document.querySelector('.endScreen');
+    const activePlayerMessage = document.querySelector('#activePlayerMessage');
+    const resetButton = document.querySelector('#resetButton');
+    
+
+    const createGUI = () => {
+        for(let i = 0; i < 3; i++){
+            for(let j = 0; j < 3; j++){
+                let gameField = document.createElement('div');
+                gameField.classList.toggle('gameField');
+                gameField.textContent = '';
+                gameField.setAttribute('row', i);
+                gameField.setAttribute('column', j);
+                gameField.addEventListener('click', () => {
+                    const row = gameField.getAttribute('row');
+                    const column = gameField.getAttribute('column');
+                    game.playRound(parseInt(row), parseInt(column));
+                })
+                gameBoardContainer.appendChild(gameField);
+            }
+        }
+
+    }
+    const claimCellGUI = (row, column, player) => {
+        let CellGUI = document.querySelector(`[row="${row}"][column="${column}"]`);
+        CellGUI.textContent = player;
+    }
+
+    const displayWinMessage = (players, winner) => {
+        if(winner == 0 || winner == 1){
+            winMessage.textContent = `${players[winner].name} WON!`
+        }else if(winner == 2){
+            winMessage.textContent = 'TIE!'
+        }
+        
+    }
+
+    const clearGUIBoard = () => {
+        let gameFields = document.querySelectorAll('.gameField');
+        gameFields.forEach((field) => {
+            field.textContent = '';
+        })
+    }
+
+    const showActivePlayer = (activePlayer) => {
+        activePlayerMessage.textContent = `${activePlayer.name}'s turn (${activePlayer.token})`
+    }
+
+    const showEndScreen = (players, winner) => {
+        endScreen.classList.remove('Hidden')
+        if(winner == 0 || winner == 1){
+            winMessage.textContent = `${players[winner].name} WON!`
+        }else if(winner == 2){
+            winMessage.textContent = 'TIE!'
+        }
+        endScreen.addEventListener('click', () => {
+            endScreen.classList.add('Hidden')
+        })
+    }
+
+    resetButton.addEventListener('click', () => {
+        game.restartGame();
+    })
+
+    return {
+        createGUI, 
+        claimCellGUI,
+        displayWinMessage, 
+        clearGUIBoard, 
+        showEndScreen, 
+        showActivePlayer}
+}
+
 function GameController(
     playerOneName = 'Player One',
     playerTwoName = 'Player Two'
 ) {
     const board = Gameboard();
+    const gui = GUIController();
 
     const players = [
         {
@@ -108,6 +188,15 @@ function GameController(
         }
     }
 
+    const restartGame = () => {
+        board.printBoard();
+        board.resetBoard();
+        gui.clearGUIBoard();
+        activePlayer = players[1];
+        switchPlayerTurn();
+        gui.showActivePlayer(getActivePlayer());
+    }
+
     const playRound = (row, column) => {
         console.log(
             `Marking the ${row}x${column} cell with ${getActivePlayer().token}`
@@ -115,30 +204,25 @@ function GameController(
         board.claimCell(column, row, getActivePlayer().token);
         
         let whoWon = checkForWin();
-        if(whoWon == 0 || whoWon == 1){
-            console.log(`Winner ${players[whoWon].name}!`);
-            board.printBoard();
-            console.log(`Winner ${players[whoWon].name}!`);
-            board.resetBoard();
-            activePlayer = players[0];
-        }else if(whoWon == 2){
-            console.log("It's a TIE!");
-            board.printBoard();
-            console.log("It's a TIE!");
-            board.resetBoard();
-            activePlayer = players[0];
+        if(whoWon == 0 || whoWon == 1 || whoWon == 2){
+            gui.showEndScreen(players, whoWon);
+            restartGame()
         }
 
         switchPlayerTurn();
+        gui.showActivePlayer(getActivePlayer());
         printNewRound();
     };
 
     printNewRound();
+    gui.createGUI();
+    gui.showActivePlayer(getActivePlayer());
 
     return {
         playRound,
         getActivePlayer,
-        checkForWin
+        checkForWin,
+        restartGame
     };
 }
 

@@ -5,28 +5,139 @@
 }
 
 body {
-    background-color: lightcoral;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background: #000000;
+    background-image: linear-gradient(rgb(105, 36, 36) .1em, transparent .1em), linear-gradient(90deg, rgb(105, 36, 36) .1em, transparent .1em);
+    background-size: 0.25em 0.25em;
 }
+
 
 .container {
     margin: 0 auto;
     width: 500px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
 }
 
-#winnerMessage {
-    text-align: center;
+#gameName {
+    font-size: 4em;
+    color: rgba(255, 255, 255, 0.521);
+    font-weight: 800;
+    user-select: none;
 }
 
-.gameBoard {
-    width: 600px;
-    height: 600px;
-    background-color: white;
+#resetButton {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: none;
+    background-color: rgba(59, 59, 59, 0);
+    border-radius: 50%;
+    margin: 10px;
+}
+
+#resetButton .bi-arrow-repeat {
+    font-size: 7em;
+    color: rgba(255, 255, 255, 0.699);
+}
+
+#resetButton .bi-arrow-repeat:hover{
+    color: white;
+}
+
+.gameBoardContainer {
+    width: 620px;
+    height: 620px;
+    background-color: rgba(133, 30, 30, 0.548);
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: content-box;
+    padding: 15px;
+    border-radius: 15px;
+    gap: 10px;
 }
 
 .gameField {
     width: 200px;
     height: 200px;
-    border: 1px solid black;
+    transition: 0.25s background-Color, 0.25s font-Size, 0.25s color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(150, 50, 50, 0.349);
+    font-size: 2.3rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    user-select: none;
+}
+
+.gameField:hover {
+    background-color: rgba(150, 50, 50, 0.671);
+    font-size: 2.6rem;
+    color: rgba(206, 205, 205, 0.671);
+}
+
+.activePlayerContainer {
+    text-align: center;
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.521);
+    user-select: none;
+}
+
+.endScreen {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000065;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: rgba(255, 255, 255, 0.486);
+    transition: 0.5s opacity, 0.5s visibility;
+    user-select: none;
+
+}
+
+.Hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.endScreen h2 {
+    font-size: 6em;
+    color: #ffffff;
+}
+
+.endScreen span {
+    cursor: pointer;
+}
+
+.signature, .signature a {
+    text-align: center;
+    position: absolute;
+    top: 97%;
+    left: 13%;
+    color: rgba(255, 255, 255, 0.603);
+    transform: translate(-50%, -50%);
+    text-decoration: none;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.2s color;
+}
+
+.signature .bi-github {
+    font-size: 25px;
+}
+
+.signature, .signature a:hover {
+    color: white;
 }
