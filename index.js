@@ -201,16 +201,21 @@ function GameController(
         console.log(
             `Marking the ${row}x${column} cell with ${getActivePlayer().token}`
         );
-        board.claimCell(column, row, getActivePlayer().token);
-        
-        let whoWon = checkForWin();
-        if(whoWon == 0 || whoWon == 1 || whoWon == 2){
-            gui.showEndScreen(players, whoWon);
-            restartGame()
+        const cellAlreadyClaimed = board.getBoard()[row][column].getValue() !== 0;
+        if (!cellAlreadyClaimed) {
+            board.claimCell(column, row, getActivePlayer().token);
+            
+            let whoWon = checkForWin();
+            if(whoWon == 0 || whoWon == 1 || whoWon == 2){
+                gui.showEndScreen(players, whoWon);
+                restartGame();
+            } else {
+                switchPlayerTurn();
+            }
+            gui.showActivePlayer(getActivePlayer());
+        } else {
+            console.log('This cell is already claimed!');
         }
-
-        switchPlayerTurn();
-        gui.showActivePlayer(getActivePlayer());
         printNewRound();
     };
 
