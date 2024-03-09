@@ -23,11 +23,6 @@ function Gameboard() {
         }
     }
 
-    const printBoard = () => {
-        const rawBoard = board.map((row) => row.map((cell) => cell.getValue()));
-        console.log(rawBoard);
-    }
-
     const resetBoard = () => {
         for(let i = 0; i < rows; i++){
             board[i] = [];
@@ -39,7 +34,6 @@ function Gameboard() {
     return {
         getBoard, 
         claimCell, 
-        printBoard,
         resetBoard
     };
 }
@@ -157,12 +151,6 @@ function GameController(
     };
 
     const getActivePlayer = () => activePlayer;
-
-    const printNewRound = () => {
-        board.printBoard();
-        console.log(`${getActivePlayer().name}'s turn.`);
-    };
-
     const checkForWin = () => {
         const rawBoard = board.getBoard().map(row => row.map(cell => cell.getValue()));
         //Check rows and columns
@@ -189,7 +177,6 @@ function GameController(
     }
 
     const restartGame = () => {
-        board.printBoard();
         board.resetBoard();
         gui.clearGUIBoard();
         activePlayer = players[1];
@@ -198,9 +185,6 @@ function GameController(
     }
 
     const playRound = (row, column) => {
-        console.log(
-            `Marking the ${row}x${column} cell with ${getActivePlayer().token}`
-        );
         const cellAlreadyClaimed = board.getBoard()[row][column].getValue() !== 0;
         if (!cellAlreadyClaimed) {
             board.claimCell(column, row, getActivePlayer().token);
@@ -216,10 +200,8 @@ function GameController(
         } else {
             console.log('This cell is already claimed!');
         }
-        printNewRound();
     };
 
-    printNewRound();
     gui.createGUI();
     gui.showActivePlayer(getActivePlayer());
 
